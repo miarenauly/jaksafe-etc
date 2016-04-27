@@ -34,7 +34,7 @@ iter = layer.getFeatures()
 # Looping the feature, and save it into new shapefile
 for feature in iter:
     geom = feature.geometry()
-    # Making shapefile (defining shapefile field name and field type one by one, the field name and type is made according to zone_rw.shp
+    # Making shapefile (defining shapefile field name and field type one by one, the field name and type is made according to boundary.shp
     namafield = MASKING_FOLDER + '%s.shp' % feature ['id_rw']
     fields = QgsFields()
     fields.append(QgsField("id", QVariant.Int))
