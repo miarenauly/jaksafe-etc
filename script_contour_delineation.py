@@ -111,7 +111,10 @@ for layer in findLayer (OUTPUT_MASKING, "*.tif"):
     if (max - min) <= 5:
         for j in  range(gdalData.RasterXSize):
             for i in  range(gdalData.RasterYSize):
-                if (min) <= lista[i,j] < (min+0.7):
+                #excepting value 0 (NoData) in data classification
+                if min == 0:
+                     lista[i,j] = 4
+                elif (min) <= lista[i,j] < (min+0.7):
                     lista[i,j] = 1
                 elif (min+0.7) <= lista[i,j] < (min+1.5):
                     lista[i,j] = 2
@@ -123,7 +126,10 @@ for layer in findLayer (OUTPUT_MASKING, "*.tif"):
     else:
         for j in  range(gdalData.RasterXSize):
             for i in  range(gdalData.RasterYSize):
-                if (min) <= lista[i,j] < (min+StdDev+0.7):
+                #excepting value 0 (NoData) in data classification
+                if min == 0:
+                    lista[i,j] = 4
+                elif (min) <= lista[i,j] < (min+StdDev+0.7):
                     lista[i,j] = 1
                 elif (min+StdDev+0.7) <= lista[i,j] < (min+StdDev+1.5):
                     lista[i,j] = 2
@@ -153,6 +159,5 @@ def findRaster (path, filter):
 
 for raster in findRaster (OUTPUT_RECLASS, "*.tif"):
     (infilepath, infilename)= os.path.split (raster)
-    print infilename
     #Polygonize the script 
     processing.runalg('gdalogr:polygonize', raster, "KELAS", (OUTPUT_POLYGON + infilename [:13] + ".shp"))
