@@ -112,7 +112,7 @@ for layer in findLayer (OUTPUT_MASKING, "*.tif"):
         for j in  range(gdalData.RasterXSize):
             for i in  range(gdalData.RasterYSize):
                 #excepting value 0 (NoData) in data classification
-                if min == 0:
+                if lista[i,j] == 0:
                      lista[i,j] = 4
                 elif (min) <= lista[i,j] < (min+0.7):
                     lista[i,j] = 1
@@ -127,7 +127,7 @@ for layer in findLayer (OUTPUT_MASKING, "*.tif"):
         for j in  range(gdalData.RasterXSize):
             for i in  range(gdalData.RasterYSize):
                 #excepting value 0 (NoData) in data classification
-                if min == 0:
+                if lista[i,j] == 0:
                     lista[i,j] = 4
                 elif (min) <= lista[i,j] < (min+StdDev+0.7):
                     lista[i,j] = 1
