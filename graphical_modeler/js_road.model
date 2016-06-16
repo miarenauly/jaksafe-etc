@@ -1,0 +1,196 @@
+{
+    "values": {
+        "inputs": {
+            "VECTORLAYER_BOUNDARY": {
+                "values": {
+                    "pos": {
+                        "values": {
+                            "y": 67.7175, 
+                            "x": 394.3235141984312
+                        }, 
+                        "class": "point"
+                    }, 
+                    "param": {
+                        "values": {
+                            "isAdvanced": false, 
+                            "name": "VECTORLAYER_BOUNDARY", 
+                            "shapetype": [
+                                2
+                            ], 
+                            "value": null, 
+                            "exported": null, 
+                            "hidden": false, 
+                            "optional": false, 
+                            "description": "hazard"
+                        }, 
+                        "class": "processing.core.parameters.ParameterVector"
+                    }
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.ModelerParameter"
+            }, 
+            "VECTORLAYER_EXPOSURE": {
+                "values": {
+                    "pos": {
+                        "values": {
+                            "y": 64.99349046125832, 
+                            "x": 164.4010141984313
+                        }, 
+                        "class": "point"
+                    }, 
+                    "param": {
+                        "values": {
+                            "isAdvanced": false, 
+                            "name": "VECTORLAYER_EXPOSURE", 
+                            "shapetype": [
+                                1
+                            ], 
+                            "value": null, 
+                            "exported": null, 
+                            "hidden": false, 
+                            "optional": false, 
+                            "description": "road_exposure"
+                        }, 
+                        "class": "processing.core.parameters.ParameterVector"
+                    }
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.ModelerParameter"
+            }
+        }, 
+        "helpContent": {}, 
+        "group": "UPDATE_JAKSAFE", 
+        "name": "js_road", 
+        "algs": {
+            "QGISINTERSECTION_1": {
+                "values": {
+                    "name": "QGISINTERSECTION_1", 
+                    "paramsFolded": true, 
+                    "outputs": {
+                        "OUTPUT": {
+                            "values": {
+                                "description": "road_intersect", 
+                                "pos": {
+                                    "values": {
+                                        "y": 361.8055766308912, 
+                                        "x": 707.5000304565477
+                                    }, 
+                                    "class": "point"
+                                }
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ModelerOutput"
+                        }
+                    }, 
+                    "outputsFolded": true, 
+                    "pos": {
+                        "values": {
+                            "y": 239.63057663089126, 
+                            "x": 498.6800304565477
+                        }, 
+                        "class": "point"
+                    }, 
+                    "dependencies": [], 
+                    "params": {
+                        "INPUT2": {
+                            "values": {
+                                "name": "VECTORLAYER_BOUNDARY"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
+                        }, 
+                        "INPUT": {
+                            "values": {
+                                "name": "VECTORLAYER_EXPOSURE"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
+                        }
+                    }, 
+                    "active": true, 
+                    "consoleName": "qgis:intersection", 
+                    "description": "Intersection"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }, 
+            "QGISIMPORTINTOPOSTGIS_1": {
+                "values": {
+                    "name": "QGISIMPORTINTOPOSTGIS_1", 
+                    "paramsFolded": true, 
+                    "outputs": {}, 
+                    "outputsFolded": true, 
+                    "pos": {
+                        "values": {
+                            "y": 604.8855766308914, 
+                            "x": 778.1125304565476
+                        }, 
+                        "class": "point"
+                    }, 
+                    "dependencies": [], 
+                    "params": {
+                        "PRIMARY_KEY": null, 
+                        "DATABASE": 0, 
+                        "TABLENAME": "road_exposure", 
+                        "DROP_STRING_LENGTH": true, 
+                        "INPUT": {
+                            "values": {
+                                "alg": "QGISEXPORTADDGEOMETRYCOLUMNS_1", 
+                                "output": "OUTPUT"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromOutput"
+                        }, 
+                        "GEOMETRY_COLUMN": "geom", 
+                        "CREATEINDEX": true, 
+                        "LOWERCASE_NAMES": true, 
+                        "OVERWRITE": true, 
+                        "SCHEMA": "public"
+                    }, 
+                    "active": true, 
+                    "consoleName": "qgis:importintopostgis", 
+                    "description": "Import into PostGIS"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }, 
+            "QGISEXPORTADDGEOMETRYCOLUMNS_1": {
+                "values": {
+                    "name": "QGISEXPORTADDGEOMETRYCOLUMNS_1", 
+                    "paramsFolded": true, 
+                    "outputs": {
+                        "OUTPUT": {
+                            "values": {
+                                "description": "road_exposure", 
+                                "pos": {
+                                    "values": {
+                                        "y": 510.3155766308914, 
+                                        "x": 852.5300304565476
+                                    }, 
+                                    "class": "point"
+                                }
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ModelerOutput"
+                        }
+                    }, 
+                    "outputsFolded": true, 
+                    "pos": {
+                        "values": {
+                            "y": 430.0355766308912, 
+                            "x": 649.2225304565476
+                        }, 
+                        "class": "point"
+                    }, 
+                    "dependencies": [], 
+                    "params": {
+                        "INPUT": {
+                            "values": {
+                                "alg": "QGISINTERSECTION_1", 
+                                "output": "OUTPUT"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromOutput"
+                        }, 
+                        "CALC_METHOD": 0
+                    }, 
+                    "active": true, 
+                    "consoleName": "qgis:exportaddgeometrycolumns", 
+                    "description": "Export/Add geometry columns"
+                }, 
+                "class": "processing.modeler.ModelerAlgorithm.Algorithm"
+            }
+        }
+    }, 
+    "class": "processing.modeler.ModelerAlgorithm.ModelerAlgorithm"
+}
