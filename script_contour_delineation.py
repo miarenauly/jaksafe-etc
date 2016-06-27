@@ -14,8 +14,12 @@ from qgis.core import *
 import processing
 
 #Set the parameter (OUTPUT PATH)
+#Input shapefile (RW Boundary)
+BOUNDARY_SHP = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/TES/boundary.shp"
 #Output of feature iteration (spliting feature from one shapefile) and going to be used as masking zone on Raster Masking Process
 MASKING_FOLDER = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/POLY RW/"
+#Input shapefile (River Polygon)
+RIVER_DKI = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/riverdki_polygon.shp"
 #Raster DEM data input path
 INPUT_RASTER = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/RASTER/jkt_erase.tif"
 #Path for output of Masking Raster Process
@@ -24,11 +28,14 @@ OUTPUT_MASKING= "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/MASK/"
 OUTPUT_RECLASS = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/RECLASS/"
 #Path for output of Polygonize Raster Process
 OUTPUT_POLYGON = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/POLYGON/"
+#Output shapefile hazard (final)
+HAZARD = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/hazard.shp"
 
 
 ########################################### FEATURE ITERATION ###################################################
 
-layer = iface.activeLayer()
+
+layer = iface.addVectorLayer(BOUNDARY_SHP, "boundary", "ogr")
 iter = layer.getFeatures()
 
 # Looping the feature, and save it into new shapefile
@@ -161,3 +168,38 @@ for raster in findRaster (OUTPUT_RECLASS, "*.tif"):
     (infilepath, infilename)= os.path.split (raster)
     #Polygonize the script 
     processing.runalg('gdalogr:polygonize', raster, "KELAS", (OUTPUT_POLYGON + infilename [:13] + ".shp"))
+    
+    
+##########################################MERGING POLYGON########################################################
+
+#making hazard shapefile
+fields = QgsFields()
+fields.append(QgsField("KELAS", QVariant.Int))
+mycrs = QgsCoordinateReferenceSystem(32748)
+shp_writer= QgsVectorFileWriter(HAZARD, "CP1250", fields, QGis.WKBPolygon, mycrs, "ESRI Shapefile")
+del shp_writer
+hazard_shp = iface.addVectorLayer(HAZARD, "hazard", "ogr")
+
+#Merging Polygon Hazard
+os.chdir (OUTPUT_POLYGON)
+def findPoly (path, filter):
+    for root, dirs, files in os.walk(path, filter):
+        for file in fnmatch.filter(files, filter):
+            yield os.path.join (root, file)
+
+hazard_shp.startEditing()
+for Poly in findPoly (OUTPUT_POLYGON, "*.shp"):
+    (infilepath, infilename)= os.path.split (Poly)
+    open_layer = iface.addVectorLayer(Poly, infilename, "ogr")
+    hfeatures = open_layer.getFeatures()
+    for hfeat in hfeatures:
+        hazard_shp.addFeatures([hfeat])
+hazard_shp.commitChanges()
+
+#Delete polygon NULL
+hrequest = QgsFeatureRequest().setFilterExpression(u'"KELAS"=4')
+hids = [f.id() for f in hazard_shp.getFeatures(hrequest)]
+hazard_shp.startEditing()
+for hfid in hids:
+    hazard_shp.deleteFeature( hfid )
+hazard_shp.commitChanges()
