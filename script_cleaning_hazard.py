@@ -3,11 +3,11 @@ import processing
 
 #Set the parameter (OUTPUT PATH)
 #Path for output of Polygonize Raster Process
-HAZARD = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/TES/hazard.shp"
+HAZARD = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/hazard.shp"
 BOUNDARY_SHP = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/boundary.shp"
 RIVER_DKI = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/riverdki_polygon.shp"
-HAZARD_RIVER = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/TES/hazard_river.shp"
-HAZARD_FINAL = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/TES/hazard_final.shp"
+HAZARD_RIVER = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/hazard_river.shp"
+HAZARD_FINAL = "E:/01 JakSAFE/09 PEMODELAN RW BANJIR QGIS/hazard_final.shp"
 
 #Union River shapefile with hazard
 processing.runalg("saga:union", HAZARD, RIVER_DKI, True, HAZARD_RIVER)
