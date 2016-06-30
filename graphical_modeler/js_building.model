@@ -21,7 +21,7 @@
                             "exported": null, 
                             "hidden": false, 
                             "optional": false, 
-                            "description": "building_exposure"
+                            "description": "hazard_final"
                         }, 
                         "class": "processing.core.parameters.ParameterVector"
                     }
@@ -92,12 +92,7 @@
                         "PREDICATE": [
                             "within"
                         ], 
-                        "JOIN": {
-                            "values": {
-                                "name": "VECTORLAYER_HAZARD"
-                            }, 
-                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
-                        }, 
+                        "STATS": "sum,mean,min,max,median", 
                         "TARGET": {
                             "values": {
                                 "alg": "QGISPOLYGONCENTROIDS_1", 
@@ -105,9 +100,14 @@
                             }, 
                             "class": "processing.modeler.ModelerAlgorithm.ValueFromOutput"
                         }, 
-                        "SUMMARY": 0, 
-                        "STATS": "sum,mean,min,max,median", 
-                        "KEEP": 1
+                        "KEEP": 1, 
+                        "JOIN": {
+                            "values": {
+                                "name": "VECTORLAYER_HAZARD"
+                            }, 
+                            "class": "processing.modeler.ModelerAlgorithm.ValueFromInput"
+                        }, 
+                        "SUMMARY": 0
                     }, 
                     "active": true, 
                     "consoleName": "qgis:joinattributesbylocation", 
