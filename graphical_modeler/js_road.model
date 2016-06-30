@@ -21,7 +21,7 @@
                             "exported": null, 
                             "hidden": false, 
                             "optional": false, 
-                            "description": "hazard"
+                            "description": "hazard_final"
                         }, 
                         "class": "processing.core.parameters.ParameterVector"
                     }
