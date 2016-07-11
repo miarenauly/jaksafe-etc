@@ -12,3 +12,5 @@
 * logic_kendaraan.docx          = contain assumption used for VEHICLE asset
 * script_cleaning_hazard.py     = contain script for cleaning hazard data after GIS process
 * script_contour_delineation.py = contain script used for making hazard data
+
+Note: Before running contour delineation script, add GDAL path (from QGIS package) to environment variable (for Windows OS), then run the script on QGIS python console.
