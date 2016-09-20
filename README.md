@@ -1,6 +1,6 @@
 # jaksafe-etc
 
-##Download manual file in http://gis.bpbd.jakarta.go.id/documents/302 for detail usage
+##Download manual file in https://drive.google.com/open?id=0B4dF4-RzahHhMjAwU3piNUhZQ0E for detail usage
 
 * form_matrix_dal               = contain detailed dal form of making dal_matrix in JakSAFE
 * graphical_modeler             = contain graphical modeler QGIS for processing GIS data in JakSAFE database making
