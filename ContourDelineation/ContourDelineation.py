@@ -47,7 +47,7 @@ class ContourDelineation:
     """QGIS Plugin Implementation."""
     	
     def select_output_folder(self):
-		foldername = QFileDialog.getSaveFileName(self.dlg, "Select output folder ","", '')
+		foldername = QFileDialog.getExistingDirectory(self.dlg, "Select output folder ","",QFileDialog.ShowDirsOnly)
 		self.dlg.outputEdit.setText(foldername)
 
 		
@@ -237,17 +237,19 @@ class ContourDelineation:
 			selectedLayerIndex = self.dlg.shpCombo.currentIndex()
 			BOUNDARY_SHP = layers[selectedLayerIndex]
 			#Input Raster
-			INPUT_RASTER = self.select_raster_file
+			selectedRaster = self.dlg.rasterEdit.text()
+			INPUT_RASTER = selectedRaster
 			#Output Folder
-			OUTPUT = self.select_output_folder
+			selectedFolder = self.dlg.outputEdit.text()
+			OUTPUT = selectedFolder
 			#Output of feature iteration (spliting feature from one shapefile) and going to be used as masking zone on Raster Masking Process
-			MASKING_FOLDER = str(OUTPUT) + ("/POLY RAW")
+			MASKING_FOLDER = str(OUTPUT) + ("/POLY RAW/")
 			#Path for output of Masking Raster Process
-			OUTPUT_MASKING= str(OUTPUT) + ("/MASK")
+			OUTPUT_MASKING= str(OUTPUT) + ("/MASK/")
 			#Path for output of Raster Reclassification Process
-			OUTPUT_RECLASS = str(OUTPUT) + ("/RECLASS")
+			OUTPUT_RECLASS = str(OUTPUT) + ("/RECLASS/")
 			#Path for output of Polygonize Raster Process
-			OUTPUT_POLYGON = str(OUTPUT) + ("/POLYGON")
+			OUTPUT_POLYGON = str(OUTPUT) + ("/POLYGON/")
 			#Output shapefile hazard (final)
 			HAZARD = str(OUTPUT) + ("hazard.shp")
 			
@@ -283,7 +285,7 @@ class ContourDelineation:
 			#Looping raster masking by calling the command line (GDAL script)
 			for shp in findShp (MASKING_FOLDER, "*.shp"):
 				(infilepath, infilename)= os.path.split (shp)
-				inLayer = MASKING_FOLDER + "/" + infilename
+				inLayer = MASKING_FOLDER + infilename
 				outRaster = OUTPUT_MASKING + infilename[:13] + ".tif"
 				cmd= 'gdalwarp -dstnodata 0 -q -cutline "%s" -crop_to_cutline -of GTiff "%s" "%s"' % (inLayer, INPUT_RASTER, outRaster)
 				call (cmd)
@@ -385,7 +387,7 @@ class ContourDelineation:
 			mycrs = QgsCoordinateReferenceSystem(32748)
 			shp_writer= QgsVectorFileWriter(HAZARD, "CP1250", fields, QGis.WKBPolygon, mycrs, "ESRI Shapefile")
 			del shp_writer
-			hazard_shp = iface.addVectorLayer(HAZARD, "hazard", "ogr")
+			hazard_shp = self.iface.addVectorLayer(HAZARD, "hazard", "ogr")
 		
 			#Merging Polygon Hazard
 			os.chdir (OUTPUT_POLYGON)
@@ -397,7 +399,7 @@ class ContourDelineation:
 			hazard_shp.startEditing()
 			for Poly in findPoly (OUTPUT_POLYGON, "*.shp"):
 				(infilepath, infilename)= os.path.split (Poly)
-				open_layer = iface.addVectorLayer(Poly, infilename, "ogr")
+				open_layer = self.iface.addVectorLayer(Poly, infilename, "ogr")
 				hfeatures = open_layer.getFeatures()
 				for hfeat in hfeatures:
 					hazard_shp.addFeatures([hfeat])
