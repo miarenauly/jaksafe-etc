@@ -52,7 +52,7 @@ class ContourDelineation:
 
 		
     def select_raster_file(self):
-	    filename = QFileDialog.getSaveFileName(self.dlg, "Select output folder ","", '')
+	    filename = QFileDialog.getOpenFileName(self.dlg, "Select output folder ","", '')
 	    self.dlg.rasterEdit.setText(filename)
 	
 	
